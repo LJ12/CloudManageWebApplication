@@ -80,7 +80,7 @@ public class StudentSign extends HttpServlet {
              sql="select Course_Latitude,Course_Longitude,Course_loginTime,Course_Time,Course_LastTime from student_sign where  CourseID ="+courseID+" and StudentID="+userID+" and Course_jieshu="+jieshu; 
              state = conn.prepareStatement(sql);
              result = state.executeQuery();
-             result.next();
+             if(result.next()){
              C_La=Double.parseDouble(result.getString("Course_Latitude"));
              C_Lo=Double.parseDouble(result.getString("Course_Longitude"));
              if(result.getString("Course_loginTime")!=null){
@@ -131,8 +131,11 @@ public class StudentSign extends HttpServlet {
                  params.put("Result", "failed");
                  params.put("Data", "签到失败，本节课程已经结束");
              }
-            
-             
+             }else{
+              params.put("Result", "failed");
+                 params.put("Data", "签到失败,您并未选择此节课程");
+             }
+         
              jsonObject.put("params", params);
               out.write(jsonObject.toString()); 
               } catch (SQLException ex) {
